@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 from random import randrange, uniform
 import time
 import json
-
+import os
 mqttBroker ="localhost"
 port = 1883
 
@@ -50,7 +50,7 @@ class node:
         self.client.publish(self.command,message)
 
 
-def load_devices(dir = "MainController/devices.json"):
+def load_devices(dir = os.path.join("MainController","devices.json")):
     all_devices = {}
     with open(dir, "rb") as devices:
         devices = json.load(devices)
