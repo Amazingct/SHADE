@@ -1,0 +1,7 @@
+esphome
+# snap install mqtt-explorer
+# sudo apt install -y mosquitto
+paho-mqtt
+tornado
+esptool
+# sudo chmod a+rw /dev/ttyUSB0

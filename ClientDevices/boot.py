@@ -1,49 +1,40 @@
-try:
-    import usocket as socket
-except:
-    import socket
-
-from machine import Pin
-import network, time
-import neopixel
-
-led = neopixel.NeoPixel(Pin(5),1)
-red = (255, 0, 0)
-green = (120, 153, 23)
-blue = (125, 204,233)
-off = (0,0,0)
-
-
-def led_write(color):
-    global led
-    led[0] = color
-    led.write()
-
+import time
+import json
+from umqttsimple import MQTTClient
+import ubinascii
+import machine
+import micropython
+import network
 import esp
-
 esp.osdebug(None)
 import gc
-
 gc.collect()
 
-led_write(red)
-time.sleep(2)
 
+with open("config.json", "r") as config:
+    config = json.load(config)
 
-import json
-with open("config.json") as config:
-    d = json.loads(config.read())
-    password = d["password"]
-    ssid = d["ssid"]
+ssid = config["wifi"]
+password = config["wifi_password"]
+mqtt_server = config["broker"]
+name = config["name"]
+#EXAMPLE IP ADDRESS
+#mqtt_server = '192.168.1.144'
+client_id = ubinascii.hexlify(machine.unique_id())
+topic_sub = bytes(name+ '/command', "utf-8")
+topic_pub = bytes(name+ '/log', "utf-8")
 
-hub = network.WLAN(network.STA_IF)
-hub.active(True)
-hub.connect(ssid, password)
+last_message = 0
+message_interval = 5
+counter = 0
+
+station = network.WLAN(network.STA_IF)
+
+station.active(True)
+station.connect(ssid, password)
+
+while station.isconnected() == False:
+  pass
 
 print('Connection successful')
-print(hub.ifconfig())
-
-led_write(green)
-time.sleep(2)
-
-
+print(station.ifconfig())

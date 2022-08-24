@@ -1,1 +1,7 @@
-{"ssid":"Amazing1", "password":"ogunlolu1", "hub":"10.42.0.1"}
+{
+    "name":"sitting_room",
+    "wifi_password":"",
+    "wifi":"",
+    "broker":""
+    
+}

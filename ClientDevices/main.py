@@ -1,90 +1,51 @@
-from machine import Pin
-from time import sleep
-import socket
+import machine
 import json
-connected = 0
+led = machine.Pin(2, machine.Pin.OUT)
+
+def switch(command):
+    if command["light"] == "on":
+        led.on()
+        client.publish(topic_pub, json.dumps({"status":"light on"}))
+    elif command["light"] == "off":
+        led.off()
+        client.publish(topic_pub, json.dumps({"status":"light off"}))
+    
+
+def sub_cb(topic, msg):
+  print((topic, msg))
+  if topic == bytes(name+ '/command', "utf-8"):
+    msg = json.loads(msg)
+    print('ESP received message', str(msg))
+    switch(msg)
+    
 
 
-import neopixel
-led = neopixel.NeoPixel(Pin(5),1)
-red = (255, 0, 0)
-green = (120, 153, 23)
-blue = (125, 204,233)
-off = (0,0,0)
+def connect_and_subscribe():
+  global client_id, mqtt_server, topic_sub
+  client = MQTTClient(client_id, mqtt_server)
+  client.set_callback(sub_cb)
+  client.connect()
+  client.subscribe(topic_sub)
+  print('Connected to %s MQTT broker, subscribed to %s topic' % (mqtt_server, topic_sub))
+  return client
 
-def led_write(color):
-    global led
-    led[0] = color
-    led.write()
+def restart_and_reconnect():
+  print('Failed to connect to MQTT broker. Reconnecting...')
+  time.sleep(10)
+  machine.reset()
 
-load = Pin(4, Pin.OUT)  # d7
+try:
+  client = connect_and_subscribe()
+except OSError as e:
+  restart_and_reconnect()
 
-# set load to off
-load.value(0)
-
-
-with open("config.json") as config:
-    d = json.loads(config.read())
-    HOST = d["hub"]
-    PORT = 65433
-
-s = 0
-
-
-def connect2hub():
-    global connected, s
-    print("Connecting to hub")
-    try:
-        s = socket.socket()
-        s.connect((HOST, PORT))
-        connected = 1
-        print("Connection successful")
-
-        for i in range(2):
-            led_write(green)
-            sleep(1)
-            led_write(red)
-            sleep(1)
-            led_write(red)
-            sleep(1)
-        led_write(red)
-
-    except:
-        connected = 0
-
-
-while connected == 0:
-    sleep(5)
-    connect2hub()
-
-# if connected proceed
 while True:
-    try:
-        data = s.recv(1024)
-        print('Received', repr(data))
-        if data == bytes("quit", "utf-8"):
-            s.close()
-            break
-        elif data == bytes("0", "utf-8"):
-            load.value(0)
-            led_write(red)
-        elif data == bytes("1", "utf-8"):
-            load.value(1)
-            led_write(blue)
-        rx = "done"
-        s.sendall(bytes(rx, "utf-8"))
-
-    except Exception as e:
-        connect2hub()
-        print(e)
-
-
-led_write(red)
-s.close()
-
-
-
-
-
-
-
+  try:
+    client.check_msg()
+    #if (time.time() - last_message) > message_interval:
+      #msg = b'Hello #%d' % counter
+      #client.publish(topic_pub, msg)
+      #last_message = time.time()
+      #counter += 1
+  except OSError as e:
+    restart_and_reconnect()
