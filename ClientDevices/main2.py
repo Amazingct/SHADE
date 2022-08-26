@@ -1,22 +1,39 @@
 import machine
 import json
 led = machine.Pin(2, machine.Pin.OUT)
+rgb = machine.Pin(13, machine.Pin.OUT)
+desk= machine.Pin(12, machine.Pin.OUT)
+fan = machine.Pin(14, machine.Pin.OUT)
 
-def switch(command):
-    if command["light"] == "on":
+command = {"rgb":"", "led":"", "desk":"", "fan":""}
+
+def switch():
+    if command["rgb"] == "on":
+        rgb.on()
+    elif command["rgb"] == "off":
+        rgb.off()
+    if command["led"] == "on":
         led.on()
-        client.publish(topic_pub, json.dumps({"status":{"light" :" on"}}))
-    elif command["light"] == "off":
+    elif command["led"] == "off":
         led.off()
-        client.publish(topic_pub, json.dumps({"status":{"light" :" off"}}))
+    if command["desk"] == "on":
+        desk.on()
+    elif command["desk"] == "off":
+        desk.off()
+    if command["led"] == "on":
+        fan.on()
+    elif command["led"] == "off":
+        fan.off()
+    client.publish(topic_pub, json.dumps(command)) 
     
 
 def sub_cb(topic, msg):
   print((topic, msg))
-  if topic == bytes(name+ '/command', "utf-8"):
+  if topic == bytes(name + '/command', "utf-8"):
     msg = json.loads(msg)
+    command.update(msg)
     print('ESP received message', str(msg))
-    switch(msg)
+    switch()
     
 
 

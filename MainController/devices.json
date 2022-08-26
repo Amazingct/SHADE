@@ -1,6 +1,1 @@
-{
-
-    "1":{"name":"sitting_room", "type":"switch", "child":["light"]},
-    "2":{"name":"office", "type":"switch", "child":["led", "rgb","desk", "fan"]}
-
-}
+{"sitting_room": {"name": "sitting_room", "type": "switch", "child": ["light"]}, "office": {"name": "office", "type": "switch", "child": ["led", "rgb", "desk", "fan"]}}
