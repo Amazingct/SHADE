@@ -24,7 +24,7 @@ class ShadeShellStub(object):
                 request_serializer=ShadeShell__pb2.command.SerializeToString,
                 response_deserializer=ShadeShell__pb2.response.FromString,
                 )
-        self.StreamLog = channel.stream_stream(
+        self.StreamLog = channel.unary_stream(
                 '/shade.ShadeShell/StreamLog',
                 request_serializer=ShadeShell__pb2.command.SerializeToString,
                 response_deserializer=ShadeShell__pb2.log.FromString,
@@ -47,7 +47,7 @@ class ShadeShellServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def StreamLog(self, request_iterator, context):
+    def StreamLog(self, request, context):
         """Server Streaming
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -67,7 +67,7 @@ def add_ShadeShellServicer_to_server(servicer, server):
                     request_deserializer=ShadeShell__pb2.command.FromString,
                     response_serializer=ShadeShell__pb2.response.SerializeToString,
             ),
-            'StreamLog': grpc.stream_stream_rpc_method_handler(
+            'StreamLog': grpc.unary_stream_rpc_method_handler(
                     servicer.StreamLog,
                     request_deserializer=ShadeShell__pb2.command.FromString,
                     response_serializer=ShadeShell__pb2.log.SerializeToString,
@@ -117,7 +117,7 @@ class ShadeShell(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def StreamLog(request_iterator,
+    def StreamLog(request,
             target,
             options=(),
             channel_credentials=None,
@@ -127,7 +127,7 @@ class ShadeShell(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(request_iterator, target, '/shade.ShadeShell/StreamLog',
+        return grpc.experimental.unary_stream(request, target, '/shade.ShadeShell/StreamLog',
             ShadeShell__pb2.command.SerializeToString,
             ShadeShell__pb2.log.FromString,
             options, channel_credentials,

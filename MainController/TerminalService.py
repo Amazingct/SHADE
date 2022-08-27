@@ -13,7 +13,6 @@ ShadeShell = ShadeShell_pb2_grpc.ShadeShellStub(channel)
 
 # rx = ShadeShell.ProcessCommand(ShadeShell_pb2.command(command="set sitting_room light off"))
 # rx = json.loads(rx.response)
-
 # print(rx["response"])
 
 # logs = ShadeShell.StreamLog(ShadeShell_pb2.command(command="sitting_room"))

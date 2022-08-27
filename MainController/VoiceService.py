@@ -16,7 +16,29 @@ ShadeShell = ShadeShell_pb2_grpc.ShadeShellStub(channel)
 
 # print(rx["response"])
 
-logs = ShadeShell.StreamLog(ShadeShell_pb2.command(command="sitting_room"))
-for log in logs:
-    print(log.log)
-                
+# logs = ShadeShell.StreamLog(ShadeShell_pb2.command(command="sitting_room"))
+# for log in logs:
+#     print(log.log)
+
+
+
+def chat_with_shell():
+    while True:
+        command = input("command: >> ")
+        if command == "add":
+            name = input("name: >> ")
+            type = input("type: >> ")
+            child = input("child (sperate with space): >> ")
+            child = child.split(" ")
+            new = {"type":type, "name":name, "child":child}
+            command_to_send = ShadeShell_pb2.command(command="add "+json.dumps(new))
+        else:
+            command_to_send = ShadeShell_pb2.command(command = command)
+        yield command_to_send
+        if command == "quit":
+            break
+        time.sleep(3)
+
+responses = ShadeShell.ShellChat(chat_with_shell())
+for response in responses:
+    print("user@sha-de: >> ", json.loads(response.response)["response"])
