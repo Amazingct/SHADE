@@ -5,5 +5,5 @@ paho-mqtt
 tornado
 esptool
 grpcio-tools
-#grpc_tools.protoc -I .\MainController\protos\ --python_out=. --grpc_python_out= .\MainController\protos\ShadeShell.proto
+#python -m  grpc_tools.protoc -I protos\ --python_out=. --grpc_python_out=. protos\ShadeShell.proto
 # sudo chmod a+rw /dev/ttyUSB0

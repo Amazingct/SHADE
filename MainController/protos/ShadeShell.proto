@@ -1,5 +1,5 @@
 syntax = "proto3";
-package sha-de;
+package shade;
 
 
 service ShadeShell {
@@ -13,11 +13,11 @@ service ShadeShell {
 
 
 message command {
-  string service_name = 1;
+  string command = 1;
 }
 
 message response {
-  string service_state = 1;
+  string response = 1;
 }
 
 message device {
@@ -25,6 +25,6 @@ message device {
 }
 
 message log {
-	string logs = 1;
+	string log = 1;
 	string debug = 2;
 }

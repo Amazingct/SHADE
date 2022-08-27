@@ -6,8 +6,8 @@ import os
 from concurrent import futures
 import time
 import grpc
-from GRPC import shell_pb2
-from GRPC import shell_pb2_grpc
+import ShadeShell_pb2
+import ShadeShell_pb2_grpc
 import socket   
 mqttBroker ="192.168.0.132"
 
@@ -47,7 +47,7 @@ class node:
         self.success["subcribe"] = True
         
     def get_log(self, index=-1, child=""):
-        time.sleep(3)
+        time.sleep(2)
         if child == "":
             if index !=-1:
                 return self.last_log
@@ -77,11 +77,9 @@ def remove_device(device_name, dir = os.path.join("MainController","devices.json
             json.dump(devices, new_devices)
         # remove device from all_devices
         all_devices.pop(device_name)
-  
-
-        print("command executed sucessfully")
-    except:
-        print("Error:", e)
+        return True, "Device removed"
+    except Exception as e:
+       return False, e
 
 
 def add_device(device_type, device_name,children, dir = os.path.join("MainController","devices.json")):
@@ -94,11 +92,10 @@ def add_device(device_type, device_name,children, dir = os.path.join("MainContro
 
         # add device to all_devices
         all_devices.update({device_name:node(device_type,device_name,children)})
-       
-        print("command executed sucessfully")
+        return True, "Device added"
 
-    except:
-        print("Error:", e)
+    except Exception as e:
+        return False, e
 
 def load_devices(dir = os.path.join("MainController","devices.json")):
     all_devices = {}
@@ -114,80 +111,85 @@ def load_devices(dir = os.path.join("MainController","devices.json")):
 
 # receive data from client
 all_devices = load_devices()
-print(all_devices)
+print("-----------------------------------------")
 def CommandMe(message):
+    c = message.split(" ")[0]
     try:
-        if message in system:
-            if message == "list":
+        
+        if c in system:
+            if c == "list":
                 if len(all_devices) == 0:
-                    print("No devices found")
+                    response = "No devices connected"
                 else:
-                    response = ""
+                    response = []
                     for device in all_devices.values():
-                        response = device.represent() + ","
-                    return "user@sha-de:>> "+ response
-            elif message == "add":
-                device_type = input("type: ")
-                device_name = input("name: ")
-                children = input("children (seperate with space): ")
-                children = children.split(" ")
+                        response.append( device.represent() )
+                
+            elif c == "add":
+                message = message[4:]
+                json_message = json.loads(message)
+                print("adding device", json_message["name"])
+                device_type = json_message["type"]
+                device_name = json_message["name"]
+                children = json_message["child"]
                 n = node(device_type,device_name,children)
                 all_devices.update({device_name:n})
-                add_device(device_type, device_name, children)
+                sucess , info = add_device(device_type, device_name, children)
                 response = "device added"
-                return "user@sha-de:>> "+ response
+            
 
-            elif message == "remove":
-                device_name = input("name: ")
+            elif c == "remove":
+                device_name = message[7:]
                 all_devices[device_name].end()
                 del all_devices[device_name]
-                remove_device(device_name)
+                sucess , info = remove_device(device_name)
                 response = "device removed"
-                return  "user@sha-de:>> "+ response
 
-            elif message == "help":
-                response = "list, addd, remove, help, exit"
-                return  "user@sha-de:>> "+ response
 
-        elif message[:3]=="set":
+            elif c == "help":
+                response = ["list", "add", "remove", "help", "exit"]
+  
+
+        elif c =="set":
             _in = message.split(" ")
             message = {_in[2]:_in[3]}
             all_devices[_in[1]].talk(json.dumps(message))
             response = all_devices[_in[1]].get_log()
-            return  "user@sha-de:>> "+ response
+
     
 
-        elif message[:3]=="get":
+        elif c =="get":
             _in = message.split(" ")
             response = all_devices[_in[1]].get_log(child=_in[2])
-            return  "user@sha-de:>>  "+ response   
-      
+           
+
+        return json.dumps({"status": "success", "response": response})
     except Exception as e:
-        return  e
+        return  json.dumps({"status": "error", "response":str(e)})
 
 # create class to service all function called - inherit from grpc
-class ShadeShellServicer(shell_pb2_grpc.ShadeShellServicer):
+class ShadeShellServicer(ShadeShell_pb2_grpc.ShadeShellServicer):
 
     def ProcessCommand(self, request, context):
         # request parameter holds the parameter from the function call
         response = CommandMe(request.command)
-        reply = shell_pb2.response(response=response)
+        reply = ShadeShell_pb2.response(response=response)
         return reply
 
     def StreamLog(self, request, context):
         while True:
-            yield shell_pb2.response(response=all_devices[request.device].get_log())
+            yield ShadeShell_pb2.response(response=all_devices[request.device].get_log())
             time.sleep(1)
 
 
 def serve():
     hostname=socket.gethostname()   
-    IPAddr=socket.gethostbyname(hostname)   
+    IPAddr="localhost" #socket.gethostbyname(hostname)   
     print("Your Computer Name is:"+hostname)   
     print("Your Computer IP Address is:"+IPAddr) 
     print("WAITING FOR REQUEST")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    shell_pb2_grpc.add_ShadeShellServicer_to_server(ShadeShellServicer(), server)
+    ShadeShell_pb2_grpc.add_ShadeShellServicer_to_server(ShadeShellServicer(), server)
     server.add_insecure_port(IPAddr+":50054")
     server.start()
     server.wait_for_termination()
@@ -196,3 +198,28 @@ def serve():
     
 if __name__ == "__main__":
     serve()
+
+a = (CommandMe("set sitting_room light off"))
+a = json.loads(a)
+print( a["response"])
+
+a = (CommandMe("get sitting_room light"))
+a = json.loads(a)
+print( a["response"])
+
+new = {"type":"switch", "name":"kitchen", "child":["light", "fan"]}
+a = (CommandMe("add "+json.dumps(new)))
+
+a = (CommandMe("list"))
+a = json.loads(a)
+print( a["response"])
+
+a = (CommandMe("remove kitchen"))
+a = json.loads(a)
+print( a["response"])
+
+a = (CommandMe("list"))
+a = json.loads(a)
+print( a["response"])
+
+ 
