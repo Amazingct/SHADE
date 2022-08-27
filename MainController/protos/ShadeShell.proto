@@ -5,9 +5,11 @@ package shade;
 service ShadeShell {
 	// Unary
 	rpc ProcessCommand (command) returns (response);
+	
+	rpc ShellChat (stream command) returns (stream response);
 
 	// Server Streaming
-	rpc StreamLog (device) returns (stream log);
+	rpc StreamLog (stream command) returns (stream log);
 
 }
 
@@ -18,10 +20,6 @@ message command {
 
 message response {
   string response = 1;
-}
-
-message device {
-  string message = 1;
 }
 
 message log {

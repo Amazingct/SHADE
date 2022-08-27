@@ -14,13 +14,12 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10ShadeShell.proto\x12\x05shade\"\x1a\n\x07\x63ommand\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\"\x1c\n\x08response\x12\x10\n\x08response\x18\x01 \x01(\t\"\x19\n\x06\x64\x65vice\x12\x0f\n\x07message\x18\x01 \x01(\t\"!\n\x03log\x12\x0b\n\x03log\x18\x01 \x01(\t\x12\r\n\x05\x64\x65\x62ug\x18\x02 \x01(\t2i\n\nShadeShell\x12\x31\n\x0eProcessCommand\x12\x0e.shade.command\x1a\x0f.shade.response\x12(\n\tStreamLog\x12\r.shade.device\x1a\n.shade.log0\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10ShadeShell.proto\x12\x05shade\"\x1a\n\x07\x63ommand\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\"\x1c\n\x08response\x12\x10\n\x08response\x18\x01 \x01(\t\"!\n\x03log\x12\x0b\n\x03log\x18\x01 \x01(\t\x12\r\n\x05\x64\x65\x62ug\x18\x02 \x01(\t2\x9e\x01\n\nShadeShell\x12\x31\n\x0eProcessCommand\x12\x0e.shade.command\x1a\x0f.shade.response\x12\x30\n\tShellChat\x12\x0e.shade.command\x1a\x0f.shade.response(\x01\x30\x01\x12+\n\tStreamLog\x12\x0e.shade.command\x1a\n.shade.log(\x01\x30\x01\x62\x06proto3')
 
 
 
 _COMMAND = DESCRIPTOR.message_types_by_name['command']
 _RESPONSE = DESCRIPTOR.message_types_by_name['response']
-_DEVICE = DESCRIPTOR.message_types_by_name['device']
 _LOG = DESCRIPTOR.message_types_by_name['log']
 command = _reflection.GeneratedProtocolMessageType('command', (_message.Message,), {
   'DESCRIPTOR' : _COMMAND,
@@ -35,13 +34,6 @@ response = _reflection.GeneratedProtocolMessageType('response', (_message.Messag
   # @@protoc_insertion_point(class_scope:shade.response)
   })
 _sym_db.RegisterMessage(response)
-
-device = _reflection.GeneratedProtocolMessageType('device', (_message.Message,), {
-  'DESCRIPTOR' : _DEVICE,
-  '__module__' : 'ShadeShell_pb2'
-  # @@protoc_insertion_point(class_scope:shade.device)
-  })
-_sym_db.RegisterMessage(device)
 
 log = _reflection.GeneratedProtocolMessageType('log', (_message.Message,), {
   'DESCRIPTOR' : _LOG,
@@ -58,10 +50,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _COMMAND._serialized_end=53
   _RESPONSE._serialized_start=55
   _RESPONSE._serialized_end=83
-  _DEVICE._serialized_start=85
-  _DEVICE._serialized_end=110
-  _LOG._serialized_start=112
-  _LOG._serialized_end=145
-  _SHADESHELL._serialized_start=147
-  _SHADESHELL._serialized_end=252
+  _LOG._serialized_start=85
+  _LOG._serialized_end=118
+  _SHADESHELL._serialized_start=121
+  _SHADESHELL._serialized_end=279
 # @@protoc_insertion_point(module_scope)

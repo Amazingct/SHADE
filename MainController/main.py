@@ -1,3 +1,7 @@
+from ast import While
+from distutils.log import debug
+from re import T
+import threading
 import paho.mqtt.client as mqtt 
 from random import randrange, uniform
 import time
@@ -42,6 +46,7 @@ class node:
         if len(self.log)>10:
             self.last_log.pop(0)
         self.last_log.append (json.loads(message.payload))
+        
 
     def on_subscribe(self, client, userdata, mid, granted_qos):
         self.success["subcribe"] = True
@@ -49,10 +54,7 @@ class node:
     def get_log(self, index=-1, child=""):
         time.sleep(2)
         if child == "":
-            if index !=-1:
-                return self.last_log
-            else:
-                return self.last_log[index]
+            return self.last_log[index]
         else:
             return self.last_log[index][child]
         
@@ -160,6 +162,7 @@ def CommandMe(message):
 
         elif c =="get":
             _in = message.split(" ")
+            print(_in)
             response = all_devices[_in[1]].get_log(child=_in[2])
            
 
@@ -178,20 +181,38 @@ class ShadeShellServicer(ShadeShell_pb2_grpc.ShadeShellServicer):
 
     def StreamLog(self, request, context):
         while True:
-            yield ShadeShell_pb2.response(response=all_devices[request.device].get_log())
+            log = all_devices[request.command].get_log()
+            debug = {}
+            log = json.dumps(log)
+            debug = json.dumps(debug)
+            yield ShadeShell_pb2.log(log=log, debug=debug)
             time.sleep(1)
-
+        
+    def ShellChat(self, request_iterator, context):
+        print("chat started")
+        try:
+            while True:
+                for request in request_iterator:
+                    if request.command == "quit":
+                        assert False # quit the loop 
+                    response = CommandMe(request.command)
+                    yield ShadeShell_pb2.response(response=response)
+        
+        except Exception as e:
+            print(e)
+            print("chat ended")
 
 def serve():
     hostname=socket.gethostname()   
     IPAddr=socket.gethostbyname(hostname)   
     print("Your Computer Name is:"+hostname)   
     print("Your Computer IP Address is:"+IPAddr) 
-    print("WAITING FOR REQUEST")
+
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     ShadeShell_pb2_grpc.add_ShadeShellServicer_to_server(ShadeShellServicer(), server)
     server.add_insecure_port(IPAddr+":50054")
     server.start()
+    print("SERVICE STARTED")
     server.wait_for_termination()
 
 
