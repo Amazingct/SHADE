@@ -184,7 +184,7 @@ class ShadeShellServicer(ShadeShell_pb2_grpc.ShadeShellServicer):
 
 def serve():
     hostname=socket.gethostname()   
-    IPAddr="localhost" #socket.gethostbyname(hostname)   
+    IPAddr=socket.gethostbyname(hostname)   
     print("Your Computer Name is:"+hostname)   
     print("Your Computer IP Address is:"+IPAddr) 
     print("WAITING FOR REQUEST")
@@ -199,27 +199,27 @@ def serve():
 if __name__ == "__main__":
     serve()
 
-a = (CommandMe("set sitting_room light off"))
-a = json.loads(a)
-print( a["response"])
+# a = (CommandMe("set sitting_room light off"))
+# a = json.loads(a)
+# print( a["response"])
 
-a = (CommandMe("get sitting_room light"))
-a = json.loads(a)
-print( a["response"])
+# a = (CommandMe("get sitting_room light"))
+# a = json.loads(a)
+# print( a["response"])
 
-new = {"type":"switch", "name":"kitchen", "child":["light", "fan"]}
-a = (CommandMe("add "+json.dumps(new)))
+# new = {"type":"switch", "name":"kitchen", "child":["light", "fan"]}
+# a = (CommandMe("add "+json.dumps(new)))
 
-a = (CommandMe("list"))
-a = json.loads(a)
-print( a["response"])
+# a = (CommandMe("list"))
+# a = json.loads(a)
+# print( a["response"])
 
-a = (CommandMe("remove kitchen"))
-a = json.loads(a)
-print( a["response"])
+# a = (CommandMe("remove kitchen"))
+# a = json.loads(a)
+# print( a["response"])
 
-a = (CommandMe("list"))
-a = json.loads(a)
-print( a["response"])
+# a = (CommandMe("list"))
+# a = json.loads(a)
+# print( a["response"])
 
  
