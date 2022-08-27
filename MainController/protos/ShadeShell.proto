@@ -1,0 +1,30 @@
+syntax = "proto3";
+package sha-de;
+
+
+service ShadeShell {
+	// Unary
+	rpc ProcessCommand (command) returns (response);
+
+	// Server Streaming
+	rpc StreamLog (device) returns (stream log);
+
+}
+
+
+message command {
+  string service_name = 1;
+}
+
+message response {
+  string service_state = 1;
+}
+
+message device {
+  string message = 1;
+}
+
+message log {
+	string logs = 1;
+	string debug = 2;
+}
