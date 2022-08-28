@@ -1,30 +1,68 @@
-from concurrent import futures
-from distutils.cmd import Command
 import json
 import time
 import grpc
 import ShadeShell_pb2
 import ShadeShell_pb2_grpc
-import socket   
-
+import pyttsx3
+import pyttsx3 
+import speech_recognition as sr
 
 channel = grpc.insecure_channel("192.168.56.1:50054")
 ShadeShell = ShadeShell_pb2_grpc.ShadeShellStub(channel)
 
-# rx = ShadeShell.ProcessCommand(ShadeShell_pb2.command(command="set sitting_room light off"))
-# rx = json.loads(rx.response)
-
-# print(rx["response"])
-
-# logs = ShadeShell.StreamLog(ShadeShell_pb2.command(command="sitting_room"))
-# for log in logs:
-#     print(log.log)
 
 
+
+engine = pyttsx3.init()
+
+def configure_voice():
+    engine.setProperty('rate', 120)
+    engine.setProperty('volume', 1.0)
+    voices = engine.getProperty('voices')
+    engine.setProperty('voice', voices[1].id)
+
+def speak(text):
+    engine.say(text)
+    engine.runAndWait()
+    while engine.isBusy():
+        time.sleep(0.1)
+ 
+    
+
+def get_audio():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        audio = r.listen(source)
+        said = ""
+
+        try:
+            said = r.recognize_google(audio)
+        except Exception as e:
+            print("Exception:", str(e))
+            
+    command = said.lower()
+    
+    return command
+
+
+def preprocess_command(command):
+    command = command.lower()
+    command = command.replace("sitting room", "sitting_room")
+    return command
+
+print("Welcome to the voice assistant")
+configure_voice()
 
 def chat_with_shell():
     while True:
-        command = input("command: >> ")
+        
+        print("voice: >> ")
+        command = get_audio()
+        command = preprocess_command(command)
+        print(command)
+        if command == "":
+            time.sleep(3)
+            continue
         if command == "add":
             name = input("name: >> ")
             type = input("type: >> ")
@@ -38,7 +76,14 @@ def chat_with_shell():
         if command == "quit":
             break
         time.sleep(3)
+        
 
 responses = ShadeShell.ShellChat(chat_with_shell())
 for response in responses:
-    print("user@sha-de: >> ", json.loads(response.response)["response"])
+    r = json.loads(response.response)["response"]
+    print("user@sha-de: >> ", r )
+    speak(r)
+
+
+
+

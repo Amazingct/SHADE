@@ -116,6 +116,7 @@ all_devices = load_devices()
 print("-----------------------------------------")
 def CommandMe(message):
     c = message.split(" ")[0]
+    print("recived", message)
     try:
         
         if c in system:
@@ -156,7 +157,8 @@ def CommandMe(message):
             _in = message.split(" ")
             message = {_in[2]:_in[3]}
             all_devices[_in[1]].talk(json.dumps(message))
-            response = all_devices[_in[1]].get_log()
+            # response = all_devices[_in[1]].get_log()
+            response = _in[1] + " " + _in[2] + " set to " + _in[3]
 
     
 
@@ -165,9 +167,10 @@ def CommandMe(message):
             print(_in)
             response = all_devices[_in[1]].get_log(child=_in[2])
            
-
+        print("response", response)
         return json.dumps({"status": "success", "response": response})
     except Exception as e:
+        print(response, e)
         return  json.dumps({"status": "error", "response":str(e)})
 
 # create class to service all function called - inherit from grpc
@@ -220,27 +223,3 @@ def serve():
 if __name__ == "__main__":
     serve()
 
-# a = (CommandMe("set sitting_room light off"))
-# a = json.loads(a)
-# print( a["response"])
-
-# a = (CommandMe("get sitting_room light"))
-# a = json.loads(a)
-# print( a["response"])
-
-# new = {"type":"switch", "name":"kitchen", "child":["light", "fan"]}
-# a = (CommandMe("add "+json.dumps(new)))
-
-# a = (CommandMe("list"))
-# a = json.loads(a)
-# print( a["response"])
-
-# a = (CommandMe("remove kitchen"))
-# a = json.loads(a)
-# print( a["response"])
-
-# a = (CommandMe("list"))
-# a = json.loads(a)
-# print( a["response"])
-
- 

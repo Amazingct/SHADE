@@ -1,9 +1,16 @@
-esphome
 # snap install mqtt-explorer
 # sudo apt install -y mosquitto
 paho-mqtt
 tornado
 esptool
 grpcio-tools
+sounddevice
+scipy
+librosa
+matplotlib
+pandas
+tensoflow
+pvporcupine
+pvleopard
 #python -m  grpc_tools.protoc -I protos\ --python_out=. --grpc_python_out=. protos\ShadeShell.proto
 # sudo chmod a+rw /dev/ttyUSB0
