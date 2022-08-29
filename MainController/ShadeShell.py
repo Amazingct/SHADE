@@ -18,7 +18,7 @@ mqttBroker ="192.168.0.132"
 port = 1883
 
 system = ["list", "add", "remove", "help", "exit"]
-
+devices_json = os.path.join("MainController","Configurations","devices.json")
 
 class node:
     def __init__(self, device_type, device_name, children=[]):
@@ -69,7 +69,7 @@ class node:
     def talk(self, message):
         self.client.publish(self.command,message)
 
-def remove_device(device_name, dir = os.path.join("MainController","devices.json")):
+def remove_device(device_name, dir = os.path.join("MainController","Configurations","devices.json")):
     try:
         # remove device from devices.json
         with open(dir, "rb") as devices:
@@ -83,8 +83,7 @@ def remove_device(device_name, dir = os.path.join("MainController","devices.json
     except Exception as e:
        return False, e
 
-
-def add_device(device_type, device_name,children, dir = os.path.join("MainController","devices.json")):
+def add_device(device_type, device_name,children, dir = os.path.join("MainController","Configurations","devices.json")):
     try:
         with open(dir, "rb") as devices:
             devices = json.load(devices)
@@ -99,7 +98,7 @@ def add_device(device_type, device_name,children, dir = os.path.join("MainContro
     except Exception as e:
         return False, e
 
-def load_devices(dir = os.path.join("MainController","devices.json")):
+def load_devices(dir = os.path.join("MainController","Configurations","devices.json")):
     all_devices = {}
 
     with open(dir, "rb") as devices:
@@ -113,6 +112,8 @@ def load_devices(dir = os.path.join("MainController","devices.json")):
 
 # receive data from client
 all_devices = load_devices()
+
+
 print("-----------------------------------------")
 def CommandMe(message):
     c = message.split(" ")[0]
@@ -166,13 +167,15 @@ def CommandMe(message):
             _in = message.split(" ")
             print(_in)
             response = all_devices[_in[1]].get_log(child=_in[2])
+
+        else:
+            response = "sorry, i don't understand"
            
         print("response", response)
         return json.dumps({"status": "success", "response": response})
     except Exception as e:
         print(response, e)
         return  json.dumps({"status": "error", "response":str(e)})
-
 # create class to service all function called - inherit from grpc
 class ShadeShellServicer(ShadeShell_pb2_grpc.ShadeShellServicer):
 

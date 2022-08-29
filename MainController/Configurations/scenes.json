@@ -1,0 +1,7 @@
+{
+"hot":{"name":"hot", "conditions": ["sitting-room temperature > 31"], "actions":["set office fan on", "set office light on"]},
+"night":{"name":"night", "conditions": ["varander day-sensor = off"], "actions":["set sitting-room light on", "set office light on"]},
+"launch":{"name":"night", "conditions": ["date-time time = 15:00"], "actions":["set sitting-room light on", "set office light on"]},
+"birthday":{"name":"night", "conditions": ["date-time date = 12:10:2021", "sitting-room temperature > 31"], "actions":["set sitting-room light on", "set office light on"]},
+"romance":{"name":"romance", "conditions": ["camera-sitting-room daniel = happy", "camera-sitting-room girlfriend = #"], "actions":["set tv netflix = romance-movie", "set  sitting-room lihght off"]}
+}

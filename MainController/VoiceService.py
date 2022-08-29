@@ -22,10 +22,11 @@ def configure_voice():
     engine.setProperty('voice', voices[1].id)
 
 def speak(text):
-    engine.say(text)
+    engine.say(str(text))
     engine.runAndWait()
     while engine.isBusy():
         time.sleep(0.1)
+        engine.stop()
  
     
 
@@ -34,7 +35,6 @@ def get_audio():
     with sr.Microphone() as source:
         audio = r.listen(source)
         said = ""
-
         try:
             said = r.recognize_google(audio)
         except Exception as e:
@@ -47,7 +47,7 @@ def get_audio():
 
 def preprocess_command(command):
     command = command.lower()
-    command = command.replace("sitting room", "sitting_room")
+    command = command.replace("sitting room", "sitting-room")
     return command
 
 print("Welcome to the voice assistant")

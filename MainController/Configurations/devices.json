@@ -1,0 +1,1 @@
+{"sitting-room": {"name": "sitting-room", "type": "switch,sensor", "child": ["light", "temperature"]}, "office": {"name": "office", "type": "switch", "child": ["led", "rgb", "desk", "fan"]}, "dinning": {"type": "switch,sensor", "name": "dinning", "child": ["light", "gas"]}}
