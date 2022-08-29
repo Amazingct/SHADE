@@ -3,7 +3,7 @@ I am on a mission to make my house smart, and I would be doing almost everything
 
 ![SMART HOME ASSISTANT AND DIGITAL ECO-SYSTEM- SHA-DE](flow.png)
 
-
+### Please Note, this is still a work in progress, kindly stay updated via the youtube playlist attached below
 ### YOUTUBE TUTORIALS
 https://youtube.com/playlist?list=PLQDvLS_MNLkf7i2TDSJD13QhRDkX_hE9F
 
