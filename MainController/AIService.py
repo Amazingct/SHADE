@@ -1,6 +1,10 @@
 import json
 import os
 '''
+SCENES CONFIGURATION:
+
+see Configurations/sences.json for more information to set up scenes
+
 for cameras, they will be named as camera-[location] eg camera-living-room.
 cameras will pusblish to the topic camera name/image and subscribe to the topic camera name/command.
 when AIService receives frames from the camera, it will run person detection and action/emotion detection on the frame,
