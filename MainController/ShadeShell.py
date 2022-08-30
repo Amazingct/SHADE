@@ -69,7 +69,7 @@ class node:
     def talk(self, message):
         self.client.publish(self.command,message)
 
-def remove_device(device_name, dir = os.path.join("MainController","Configurations","devices.json")):
+def remove_device(device_name, dir = devices_json):
     try:
         # remove device from devices.json
         with open(dir, "rb") as devices:
@@ -83,7 +83,7 @@ def remove_device(device_name, dir = os.path.join("MainController","Configuratio
     except Exception as e:
        return False, e
 
-def add_device(device_type, device_name,children, dir = os.path.join("MainController","Configurations","devices.json")):
+def add_device(device_type, device_name,children, dir = devices_json):
     try:
         with open(dir, "rb") as devices:
             devices = json.load(devices)
@@ -98,7 +98,7 @@ def add_device(device_type, device_name,children, dir = os.path.join("MainContro
     except Exception as e:
         return False, e
 
-def load_devices(dir = os.path.join("MainController","Configurations","devices.json")):
+def load_devices(dir = devices_json):
     all_devices = {}
 
     with open(dir, "rb") as devices:
@@ -113,8 +113,8 @@ def load_devices(dir = os.path.join("MainController","Configurations","devices.j
 # receive data from client
 all_devices = load_devices()
 
-
 print("-----------------------------------------")
+
 def CommandMe(message):
     c = message.split(" ")[0]
     print("recived", message)
@@ -177,6 +177,7 @@ def CommandMe(message):
         print(response, e)
         return  json.dumps({"status": "error", "response":str(e)})
 # create class to service all function called - inherit from grpc
+
 class ShadeShellServicer(ShadeShell_pb2_grpc.ShadeShellServicer):
 
     def ProcessCommand(self, request, context):
@@ -186,6 +187,8 @@ class ShadeShellServicer(ShadeShell_pb2_grpc.ShadeShellServicer):
         return reply
 
     def StreamLog(self, request, context):
+        print("streaming started")
+        # keep streaming until client disconnects
         while True:
             log = all_devices[request.command].get_log()
             debug = {}
@@ -193,6 +196,12 @@ class ShadeShellServicer(ShadeShell_pb2_grpc.ShadeShellServicer):
             debug = json.dumps(debug)
             yield ShadeShell_pb2.log(log=log, debug=debug)
             time.sleep(1)
+            if context.is_active():
+                print("streaming")
+            else:
+                print("client disconnected")
+                break
+        print("streaming stopped")
         
     def ShellChat(self, request_iterator, context):
         print("chat started")

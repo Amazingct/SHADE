@@ -18,18 +18,13 @@ ssid = config["wifi"]
 password = config["wifi_password"]
 mqtt_server = config["broker"]
 name = config["name"]
-#EXAMPLE IP ADDRESS
-#mqtt_server = '192.168.1.144'
+
 client_id = ubinascii.hexlify(machine.unique_id())
 topic_sub = bytes(name+ '/command', "utf-8")
 topic_pub = bytes(name+ '/log', "utf-8")
 
-last_message = 0
-message_interval = 5
-counter = 0
 
 station = network.WLAN(network.STA_IF)
-
 station.active(True)
 station.connect(ssid, password)
 

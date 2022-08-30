@@ -1,24 +1,26 @@
 import machine
 import json
 from random import randrange, uniform
-led = machine.Pin(2, machine.Pin.OUT)
-children = {"light":"", "temperature":""}
-message_interval = 5
 
+led = machine.Pin(2, machine.Pin.OUT)
+children = {"light":"0", "temperature":""}
+last_message = 0
+message_interval = 1
+counter = 0
 
 def switch(command):
     try:
-        if command["light"] == "on":
+        if command["light"] == "1":
             led.on()
-            children.update({"light":"on"})
-        elif command["light"] == "off":
+            children.update({"light":"1"})
+        elif command["light"] == "0":
             led.off()
-            children.update({"light":"off"})
+            children.update({"light":"0"})
     except Exception as e:
         client.publish("debug", json.dumps(command.update({"error":e})))
         
 def update_children():
-    children["temperature"] =  uniform(20.0, 31.0)
+    children["temperature"] =  uniform(20.0, 60.0)
 
 def sub_cb(topic, msg):
   print((topic, msg))
@@ -47,6 +49,7 @@ try:
   client = connect_and_subscribe()
 except OSError as e:
   restart_and_reconnect()
+
 
 while True:
   try:
