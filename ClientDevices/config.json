@@ -1,7 +1,7 @@
 {
     "name":"sitting-room",
-    "wifi_password":"falconmtn123",
-    "wifi":"falcon",
+    "wifi_password":"***",
+    "wifi":"***",
     "broker":"192.168.0.132",
     "children": ["light", "temperature"],
     "type" : "switch,sensor"

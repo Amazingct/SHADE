@@ -156,6 +156,10 @@ def CommandMe(message):
 
         elif c =="set":
             _in = message.split(" ")
+            if _in[3] == "on":
+                _in[3 ]="1"
+            elif _in[3] == "off":
+                _in[3] = "0"
             message = {_in[2]:_in[3]}
             all_devices[_in[1]].talk(json.dumps(message))
             # response = all_devices[_in[1]].get_log()
@@ -189,19 +193,22 @@ class ShadeShellServicer(ShadeShell_pb2_grpc.ShadeShellServicer):
     def StreamLog(self, request, context):
         print("streaming started")
         # keep streaming until client disconnects
-        while True:
-            log = all_devices[request.command].get_log()
-            debug = {}
-            log = json.dumps(log)
-            debug = json.dumps(debug)
-            yield ShadeShell_pb2.log(log=log, debug=debug)
-            time.sleep(1)
-            if context.is_active():
-                print("streaming")
-            else:
-                print("client disconnected")
-                break
-        print("streaming stopped")
+        try:
+            while True:
+                log = all_devices[request.command].get_log()
+                debug = {}
+                log = json.dumps(log)
+                debug = json.dumps(debug)
+                yield ShadeShell_pb2.log(log=log, debug=debug)
+                time.sleep(1)
+                if context.is_active():
+                    print("streaming")
+                else:
+                    print("client disconnected")
+                    break
+            print("streaming stopped")
+        except Exception as e:
+            print(e)
         
     def ShellChat(self, request_iterator, context):
         print("chat started")

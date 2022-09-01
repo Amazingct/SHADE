@@ -5,5 +5,5 @@
 
 
 "launch":{"name":"night", "conditions": ["date-time time == 15:00"], "actions":["set sitting-room light 1", "set office ledlight 1"]},
-"romance":{"name":"romance", "conditions": ["camera-sitting-room daniel == happy", "camera-sitting-room girlfriend == ."], "actions":["set tv netflix == romance-movie", "set  sitting-room light 0"]}
+"romance":{"name":"romance", "conditions": ["camera-sitting-room daniel == happy", "camera-sitting-room girlfriend == ."], "actions":["set tv netflix == romance-movie", "set sitting-room light 0"]}
 }

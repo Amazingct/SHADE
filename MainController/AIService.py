@@ -53,6 +53,7 @@ class Scene:
         self.conditions = conditions
         self.actions = actions
         self.streams = {}
+        self.nodes_being_streamed = []
 
 
     def __repr__(self) -> str:
@@ -72,7 +73,9 @@ class Scene:
     def start_streaming(self):
         for condition in self.conditions:
             node = condition.split(" ")[0]
-            th.Thread(target=self._start_streaming, args=(node, condition)).start()
+            if node not in self.nodes_being_streamed:
+                th.Thread(target=self._start_streaming, args=(node, condition)).start()
+                self.nodes_being_streamed.append(node)
 
     def act(self, should_i_act):
         if should_i_act:
