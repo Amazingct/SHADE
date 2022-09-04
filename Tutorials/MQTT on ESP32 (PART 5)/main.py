@@ -5,7 +5,7 @@ from random import randrange, uniform
 import ubinascii
 
 mqtt_server = "192.168.0.132"
-name = "bathroom"
+name = "office"
 
 topic_sub =name+ '/command' #bathroom/command
 topic_pub = name+ '/log' #bathroom/log

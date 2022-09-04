@@ -5,12 +5,14 @@ import json
 import ubinascii
 from umqttsimple import MQTTClient
 from random import randrange, uniform
+
 led = Pin(2, Pin.OUT)
+
 mqtt_server = "192.168.0.132"
-name = "bathroom"
+name = "office"
 children = {"light":"0", "temperature":"0"}
 
-topic_sub =name+ '/command' #bathroom/command
+topic_sub =name+ '/command' #master-room/command
 topic_pub = name+ '/log' #bathroom/log
 
 def on_message(topic, msg):
@@ -43,7 +45,8 @@ while True:
     temp = uniform (20.5, 60.5)
     children.update({"temperature":temp})
     client.publish(topic_pub, json.dumps(children))
-    time.sleep(2)
+    #time.sleep(2)
     
+
 
 
