@@ -36,7 +36,7 @@ Notes:
 3. The . (dot) represents any person or any action or any emotion
 
 '''
-scenes_path = os.path.join(os.path.dirname(__file__), "Configurations/scenes.json")
+scenes_path = os.path.join(os.path.dirname(__file__), "Configurations/scenes copy.json")
 channel = grpc.insecure_channel("192.168.56.1:50054")
 ShadeShell = ShadeShell_pb2_grpc.ShadeShellStub(channel)
 
@@ -91,25 +91,19 @@ class Scene:
         operator = condition_[2]
         value = condition_[3]
 
-        if node not in ["date-time","tv"]: # regular switches and sensors
+        if node not in ["date-time","tv"] and "camera" not in node: # regular switches and sensors
             if operator == "=":
-                print("Condition met:", condition)
                 return float(self.streams[node][child]) == float(value)
             elif operator == ">":
                 print()
-                print("Condition met:", condition)
                 return float(self.streams[node][child]) > float(value)
             elif operator == "<":
-                print("Condition met:", condition)
                 return float(self.streams[node][child]) < float(value)
             elif operator == ">=":
-                print("Condition met:", condition)
                 return float(self.streams[node][child]) >= float(value)
             elif operator == "<=":
-                print("Condition met:", condition)
                 return float(self.streams[node][child]) <= float(value)
             elif operator == "!=":
-                print("Condition met:", condition)
                 return float(self.streams[node][child]) != float(value)
             else:
                 #print("Condition not met:", condition)
@@ -118,13 +112,27 @@ class Scene:
             pass
 
         elif "camera" in node: # camera is a special case, it has . (dot) as a value, so we need to check if the value is .
-            pass
+            persons = self.streams[node]["persons"]
+            actions = self.streams[node]["actions"]
+            emotions = self.streams[node]["emotions"]
+            
+            
+            is_person_present = False
+            is_action_present = False
+            is_emotion_present = False
+
+            is_person_present = True if child == "." else child in persons     
+            is_action_present = True if value.split("/")[0] == "." else value.split("/")[0] in actions
+            is_emotion_present = True if value.split("/")[1] == "." else value.split("/")[1] in emotions
+
+            if operator == "=":
+                return is_person_present and is_action_present and is_emotion_present
+            elif operator == "!=":
+                return not (is_person_present and is_action_present and is_emotion_present)
+            else:
+                return False
 
 
-        
-
-
-        
 
     def start(self):
         self.start_streaming()
@@ -136,12 +144,15 @@ class Scene:
 
 
 
-if __name__ == "__main__":
-    all_scenes = load_scenes()
-    scenes = []
-    for name, scene in all_scenes.items():
-        s = Scene(scene["name"], scene["conditions"], scene["actions"])
-        scenes.append(s)
-        scenes[-1].start()
-        print(s)
+
+all_scenes = load_scenes()
+scenes = []
+for name, scene in all_scenes.items():
+    s = Scene(scene["name"], scene["conditions"], scene["actions"])
+    scenes.append(s)
+    print(s)
+scenes[1].start()
+scenes[0].start()
+
+
 

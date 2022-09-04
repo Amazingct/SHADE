@@ -1,0 +1,4 @@
+{
+    "available":{"name":"available", "conditions": ["office/camera person = standing/."], "actions":["set office light 1"]},
+    "not_available":{"name":"not_available", "conditions": ["office/camera person != standing/."], "actions":["set office light 0"]}
+}

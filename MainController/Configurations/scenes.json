@@ -1,9 +1,9 @@
 {
 "hot":{"name":"hot", "conditions": ["sitting-room temperature > 30"], "actions":["set office fan 1", "set sitting-room light 1"]},
 "not-hot":{"name":"not hot", "conditions": ["sitting-room temperature < 30"], "actions":["set office fan 0", "set sitting-room light 0"]},
-"night":{"name":"night", "conditions": ["varander day-sensor == 0"], "actions":["set sitting-room light 1", "set office light 1"]},
+"night":{"name":"night", "conditions": ["varander day-sensor = 0"], "actions":["set sitting-room light 1", "set office light 1"]},
 
 
-"launch":{"name":"night", "conditions": ["date-time time == 15:00"], "actions":["set sitting-room light 1", "set office ledlight 1"]},
-"romance":{"name":"romance", "conditions": ["camera-sitting-room daniel == happy", "camera-sitting-room girlfriend == ."], "actions":["set tv netflix == romance-movie", "set sitting-room light 0"]}
+"launch":{"name":"night", "conditions": ["date-time time = 15:00"], "actions":["set sitting-room light 1", "set office ledlight 1"]},
+"romance":{"name":"romance", "conditions": ["office/camera person = standing/."], "actions":["set office light 1"]}
 }

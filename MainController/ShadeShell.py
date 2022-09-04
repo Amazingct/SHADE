@@ -52,7 +52,7 @@ class node:
         self.success["subcribe"] = True
         
     def get_log(self, index=-1, child=""):
-        time.sleep(2)
+        #time.sleep(2)
         if child == "":
             return self.last_log[index]
         else:
