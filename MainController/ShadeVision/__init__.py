@@ -61,7 +61,7 @@ def person(npimg):
     allperson = {'bb': [], 'confidence': [], 'class': [], 'cropped': []}
     if len(results)> 0:
         for p in results:
-            if p[-1] == 0:
+            if p[-1] == 0 and p[4] > 0.5:
                 x, y, x1, y1 = [round(i) for i in p[:4]]
                 allperson["bb"].append([x, y, x1-x, y1-y])
                 allperson["confidence"].append(p[4])

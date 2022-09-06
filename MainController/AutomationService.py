@@ -54,6 +54,7 @@ class Scene:
         self.actions = actions
         self.streams = {}
         self.nodes_being_streamed = []
+        self.active = False
 
 
     def __repr__(self) -> str:
@@ -69,6 +70,8 @@ class Scene:
             self.streams.update({node:json.loads(log.log)})
             should_i_act = self.check_conditions(condition)
             self.act(should_i_act)
+            if self.active == False:
+                break
 
     def start_streaming(self):
         for condition in self.conditions:
@@ -135,11 +138,12 @@ class Scene:
 
 
     def start(self):
+        self.active = True
         self.start_streaming()
 
 
     def stop(self):
-        pass
+        self.active  = False
 
 
 
@@ -154,5 +158,7 @@ for name, scene in all_scenes.items():
 scenes[1].start()
 scenes[0].start()
 
-
+# time.sleep(15)
+# scenes[1].stop()
+# scenes[0].stop()
 
