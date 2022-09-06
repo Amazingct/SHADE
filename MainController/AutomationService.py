@@ -37,7 +37,7 @@ Notes:
 
 '''
 scenes_path = os.path.join(os.path.dirname(__file__), "Configurations/scenes copy.json")
-channel = grpc.insecure_channel("127.0.1.1:50054")
+channel = grpc.insecure_channel("192.168.56.1:50054")
 ShadeShell = ShadeShell_pb2_grpc.ShadeShellStub(channel)
 
 

@@ -8,7 +8,7 @@ from GRPC import ShadeShell_pb2_grpc
 import socket   
 
 
-channel = grpc.insecure_channel("127.0.1.1:50054")
+channel = grpc.insecure_channel("192.168.56.1:50054")
 ShadeShell = ShadeShell_pb2_grpc.ShadeShellStub(channel)
 
 # rx = ShadeShell.ProcessCommand(ShadeShell_pb2.command(command="set sitting_room light off"))
