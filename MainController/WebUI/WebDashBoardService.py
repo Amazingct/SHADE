@@ -23,7 +23,7 @@ st.write(
 )
 
 devices_json = os.path.join("MainController","Configurations","devices.json")
-scenes_json = os.path.join("MainController","Configurations","scenes copy.json")
+scenes_json = os.path.join("MainController","Configurations","scenes_copy.json")
 
 scenes = pd.read_json(scenes_json, orient="index")
 devices = pd.read_json(devices_json, orient="index")

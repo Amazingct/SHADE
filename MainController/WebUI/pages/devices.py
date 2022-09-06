@@ -4,8 +4,8 @@ from distutils.cmd import Command
 import json
 import time
 import grpc
-import ShadeShell_pb2
-import ShadeShell_pb2_grpc
+from GRPC import ShadeShell_pb2
+from GRPC import ShadeShell_pb2_grpc
 import os
 
 
@@ -30,5 +30,5 @@ for id, info in devices.items():
     with st.container():
         st.write("## {}".format(info["name"]))
         for child in info["child"]:
-            st.write("### {}".format(child))q
+            st.write("### {}".format(child))
         

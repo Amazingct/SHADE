@@ -28,7 +28,7 @@ def you_downloader(link, filename = 'output', path_location = 'videos', fileform
 url = "https://drive.google.com/file/d/1zKOPjD--hbC4sbIJhjPh3wHxxgkkgjIs/view?usp=sharing"
 
 workin_dir = os.getcwd()
-path_location =os.path.join(workin_dir,"person.pt")
+path_location =os.path.join(workin_dir,"MainController","ShadeVision","person.pt")
 model=None
 
 if os.path.exists(path_location):
@@ -48,7 +48,7 @@ def RecogniseAction_Emotion(full_body_frame):
     pass # standing, sitting, happy, sad, angry, scared, surprised, neutral
 
 def DetectFace(frame):
-    face_cascade = cv.CascadeClassifier('MainController\ShadeVision\haarcascade_face_default.xml')
+    face_cascade = cv.CascadeClassifier(os.path.join('MainController','ShadeVision','haarcascade_face_default.xml'))
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
     return faces

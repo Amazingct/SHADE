@@ -3,8 +3,8 @@ import json
 import os
 import time
 import grpc
-import ShadeShell_pb2
-import ShadeShell_pb2_grpc
+from GRPC import ShadeShell_pb2
+from GRPC import ShadeShell_pb2_grpc
 import pandas as pd
 import threading as th
 '''

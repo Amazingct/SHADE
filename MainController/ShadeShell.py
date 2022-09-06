@@ -11,8 +11,8 @@ import os
 from concurrent import futures
 import time
 import grpc
-import ShadeShell_pb2
-import ShadeShell_pb2_grpc
+from GRPC import ShadeShell_pb2
+from GRPC import ShadeShell_pb2_grpc
 import socket   
 mqttBroker ="192.168.0.132"
 
