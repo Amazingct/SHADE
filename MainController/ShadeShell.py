@@ -1,5 +1,6 @@
 from ast import While
 from distutils.log import debug
+from http import client
 from re import T
 import threading
 import paho.mqtt.client as mqtt 
@@ -19,6 +20,18 @@ port = 1883
 
 system = ["list", "add", "remove", "help", "exit"]
 devices_json = os.path.join("MainController","Configurations","devices.json")
+
+def date_time():
+    dnode = mqtt.Client("vision")
+    dnode.connect(mqttBroker, port)
+    while True:
+        dt =  time.strftime("%Y-%m-%d %H-%M-%S", time.localtime())
+        dt = dt.split(" ")
+        to_send = json.dumps({"date":dt[0], "time":dt[1][:-3]})
+        #to_send = json.dumps(dict(zip(["year","month","day","hour","minute","second"],dt.split("-"))))
+        dnode.publish("date-time/log", to_send)
+        
+threading.Thread(target=date_time).start()
 
 class node:
     def __init__(self, device_type, device_name, children=[]):

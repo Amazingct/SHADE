@@ -37,8 +37,10 @@ Notes:
 
 '''
 scenes_path = os.path.join(os.path.dirname(__file__), "Configurations/scenes copy.json")
-channel = grpc.insecure_channel("192.168.56.1:50054")
+channel = grpc.insecure_channel("127.0.1.1:50054")
 ShadeShell = ShadeShell_pb2_grpc.ShadeShellStub(channel)
+
+
 
 def load_scenes(dir = scenes_path):
     scenes = {}
@@ -67,6 +69,7 @@ class Scene:
     def _start_streaming(self, node, condition):
         logs = ShadeShell.StreamLog(ShadeShell_pb2.command(command=node))
         for log in logs:
+            print(log.log)
             self.streams.update({node:json.loads(log.log)})
             should_i_act = self.check_conditions(condition)
             self.act(should_i_act)
@@ -98,7 +101,6 @@ class Scene:
             if operator == "=":
                 return float(self.streams[node][child]) == float(value)
             elif operator == ">":
-                print()
                 return float(self.streams[node][child]) > float(value)
             elif operator == "<":
                 return float(self.streams[node][child]) < float(value)
@@ -112,7 +114,11 @@ class Scene:
                 #print("Condition not met:", condition)
                 return False
         elif node in ["date-time","tv"]: # tv and date-time are special cases, cant convert ther value to float
-            pass
+            if operator == "=":
+                return self.streams[node][child] == value
+            else:
+                return False
+        
 
         elif "camera" in node: # camera is a special case, it has . (dot) as a value, so we need to check if the value is .
             persons = self.streams[node]["persons"]
@@ -155,8 +161,8 @@ for name, scene in all_scenes.items():
     s = Scene(scene["name"], scene["conditions"], scene["actions"])
     scenes.append(s)
     print(s)
-scenes[1].start()
-scenes[0].start()
+scenes[2].start()
+#scenes[0].start()
 
 # time.sleep(15)
 # scenes[1].stop()
