@@ -1,4 +1,6 @@
 {
     "available":{"name":"available", "conditions": ["office/camera person = standing/."], "actions":["set office light 1"]},
-    "not_available":{"name":"not_available", "conditions": ["office/camera person != standing/."], "actions":["set office light 0"]}
+    "not_available":{"name":"not_available", "conditions": ["office/camera person != standing/."], "actions":["set office light 0"]},
+    "launch":{"name":"night", "conditions": ["date-time time = 11-18"], "actions":["set office light 0"]}
+
 }
