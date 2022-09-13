@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt 
 import json
 import os
-import time
+
 mqttBroker ="192.168.0.132"
 port = 1883
 
@@ -19,23 +19,19 @@ class node:
         self.client = mqtt.Client(node_name)
         self.client.connect(mqttBroker, port)
         self.client._on_message = self.on_message
-        self.client.on_subscribe = self.on_subscribe
         self.client.subscribe(self.log)
-        self.success={"subcribe":False}
         self.last_log = ["None"]
         self.client.loop_start()
     
+
     def represent(self):
         return self.name + " --> "+ "type: " + str(self.type) + ", children: " + str(self.children)
 
-    def on_message(self,client, userdata, message):
+    def on_message(self, client, userdata, message):
         if len(self.last_log)>10:
             self.last_log.pop(0)
         self.last_log.append (json.loads(message.payload))
         
-
-    def on_subscribe(self, client, userdata, mid, granted_qos):
-        self.success["subcribe"] = True
         
     def get_log(self, index=-1, child=""):
         #time.sleep(2)
@@ -56,19 +52,17 @@ class node:
         self.client.publish(self.command,message)
 
 def remove_device(node_name, dir = devices_json):
-    try:
-        # remove device from devices.json
-        with open(dir, "rb") as devices:
-            devices = json.load(devices)
-        devices.pop(node_name)
-        with open(dir, "w") as new_devices:
-            json.dump(devices, new_devices, indent=4)
-        # remove device from all_devices
-        all_devices.pop(node_name)
-        return True, "Device removed"
-    except Exception as e:
-       return False, e
+    # remove device from devices.json
+    with open(dir, "rb") as devices:
+        devices = json.load(devices)
+    devices.pop(node_name)
 
+    with open(dir, "w") as new_devices:
+        json.dump(devices, new_devices, indent=4)
+    # remove device from all_devices
+    all_devices.pop(node_name)
+    return True, "Device removed"
+   
 def add_device(device_type, node_name,children, dir = devices_json):
     try:
         with open(dir, "rb") as devices:
@@ -86,21 +80,18 @@ def add_device(device_type, node_name,children, dir = devices_json):
 
 def load_devices(dir = devices_json):
     all_devices = {}
-
     with open(dir, "rb") as devices:
         devices = json.load(devices)
+        
     for id, info in devices.items():
         n = node(info["type"],id,children=info["child"])
         all_devices.update({info["name"]:n})
-
-        
     return all_devices
 
 def CommandMe(message):
     c = message.split(" ")[0]
     print("recived :", message)
     try:
-        
         if c in system:
             if c == "list":
                 if len(all_devices) == 0:
@@ -111,12 +102,13 @@ def CommandMe(message):
                         response.append( device.represent() )
                 
             elif c == "add":
-                message = message[4:]
+                message = message[4:] #pick the json part of the message
                 json_message = json.loads(message)
                 print("adding device", json_message["name"])
                 device_type = json_message["type"]
                 node_name = json_message["name"]
                 children = json_message["child"]
+
                 n = node(device_type,node_name,children)
                 all_devices.update({node_name:n})
                 sucess , info = add_device(device_type, node_name, children)
@@ -160,10 +152,9 @@ def CommandMe(message):
 # receive data from client
 all_devices = load_devices()
 
-print("-----------------------------------------")
+
 
 rx = CommandMe("list")
 print(rx["status"])
 print(rx["response"])
 
-# rx = CommandMe("add {\"type\":\"light\",\"name\":\"light1\",\"child\":[]}")
