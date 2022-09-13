@@ -5,7 +5,7 @@ from random import randrange, uniform
 led = machine.Pin(2, machine.Pin.OUT)
 children = {"light":"0", "temperature":""}
 last_message = 0
-message_interval = 1
+message_interval = 2
 counter = 0
 
 def switch(command):

@@ -1,6 +1,6 @@
 {
-    "name":"sitting-room",
-    "wifi_password":"***",
+    "name":"office",
+    "wifi_password":"****",
     "wifi":"***",
     "broker":"192.168.0.132",
     "children": ["light", "temperature"],
