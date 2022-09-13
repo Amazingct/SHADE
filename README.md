@@ -20,8 +20,9 @@ https://youtube.com/playlist?list=PLQDvLS_MNLkf7i2TDSJD13QhRDkX_hE9F
 4. camera: read(person, actions, emotions, frame)
 5. date-time:read(time, date)
 
-READ: The Value can be read via the [node name]/log topic (eg: office/log)
-WRITE: The value can be change via the [node name]/command topic (eg: office/command)
+### TYPE DEFINITION
+1. READ: The Value can be read via the [node name]/log topic (eg: office/log)
+2. WRITE: The value can be change via the [node name]/command topic (eg: office/command)
 
 
 
