@@ -1,0 +1,24 @@
+{
+    "sitting-room": {
+        "name": "sitting-room",
+        "type": [
+            "switch",
+            "sensor"
+        ],
+        "child": [
+            "light",
+            "temperature"
+        ]
+    },
+    "office": {
+        "name": "office",
+        "type": [
+            "switch",
+            "sensor"
+        ],
+        "child": [
+            "light",
+            "temperature"
+        ]
+    }
+}

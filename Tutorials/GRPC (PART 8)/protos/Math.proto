@@ -1,0 +1,37 @@
+syntax = "proto3";
+package shade;
+
+
+service Math {
+	// Unary
+	rpc add (commandadd) returns (responseadd);
+	
+	// Server and Client Stream
+	rpc chat (stream command) returns (stream response);
+
+	// Server Streaming
+	rpc count (commandadd) returns (stream responseadd);
+
+	// client streaming
+	rpc recite (stream command) returns (response);
+
+}
+
+
+message commandadd {
+  int32 a = 1;
+  int32 b = 2;
+}
+
+message responseadd {
+  int32 sum = 1;
+}
+
+
+message command {
+    string command = 1;
+}
+
+message response {
+    string response = 1;
+}

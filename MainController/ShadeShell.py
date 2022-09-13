@@ -53,10 +53,10 @@ class node:
         return self.name + " --> "+ "type: " + self.type + ", children: " + str(self.children)
 
     def represent(self) -> str:
-        return self.name + " --> "+ "type: " + self.type + ", children: " + str(self.children)
+        return self.name + " --> "+ "type: " + str(self.type) + ", children: " + str(self.children)
 
     def on_message(self,client, userdata, message):
-        if len(self.log)>10:
+        if len(self.last_log)>10:
             self.last_log.pop(0)
         self.last_log.append (json.loads(message.payload))
         
@@ -83,13 +83,14 @@ class node:
         self.client.publish(self.command,message)
 
 def remove_device(device_name, dir = devices_json):
+    global all_devices
     try:
         # remove device from devices.json
         with open(dir, "rb") as devices:
             devices = json.load(devices)
         devices.pop(device_name)
         with open(dir, "w") as new_devices:
-            json.dump(devices, new_devices)
+            json.dump(devices, new_devices, indent=4)
         # remove device from all_devices
         all_devices.pop(device_name)
         return True, "Device removed"
@@ -97,12 +98,13 @@ def remove_device(device_name, dir = devices_json):
        return False, e
 
 def add_device(device_type, device_name,children, dir = devices_json):
+    global all_devices
     try:
         with open(dir, "rb") as devices:
             devices = json.load(devices)
         devices.update({device_name:{"type":device_type, "name":device_name, "child":children}})
         with open(dir, "w") as new_devices:
-            json.dump(devices, new_devices)
+            json.dump(devices, new_devices, indent= 4)
 
         # add device to all_devices
         all_devices.update({device_name:node(device_type,device_name,children)})
@@ -112,6 +114,7 @@ def add_device(device_type, device_name,children, dir = devices_json):
         return False, e
 
 def load_devices(dir = devices_json):
+    global all_devices
     all_devices = {}
 
     with open(dir, "rb") as devices:

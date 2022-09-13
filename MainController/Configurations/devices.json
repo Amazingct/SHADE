@@ -1,6 +1,1 @@
-{
-"sitting-room": {"name": "sitting-room", "type": "switch,sensor", "child": ["light", "temperature"]}, 
-"office": {"name": "office", "type": "switch,sensor", "child": ["light", "temperature"]},
-"office/camera": {"type": "camera", "name": "office/camera", "child": ["persons", "actions","emotions"]},
-"date-time": {"type": "date-time", "name": "date-time", "child": ["date","time"]}
-}
+{"sitting-room": {"name": "sitting-room", "type": ["switch", "sensor"], "child": ["light", "temperature"]}, "office": {"name": "office", "type": ["switch", "sensor"], "child": ["light", "temperature"]}, "office/camera": {"type": "camera", "name": "office/camera", "child": ["persons", "actions", "emotions"]}, "date-time": {"type": "date-time", "name": "date-time", "child": ["date", "time"]}, "bathroom": {"type": ["sensor", "dimmer"], "name": "bathroom", "child": ["smoke", "heater"]}}

@@ -45,6 +45,11 @@ class NodeCard:
         self.children_command = dict(zip(children, ["" for i in range(len(children))]))
 
 
+        #update devices state
+        self.update_state()
+
+        
+
     def send_command(self,child):
         child = child.lower()
         state = str(self.children_command[child]).lower()

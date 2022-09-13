@@ -26,9 +26,10 @@ def chat_with_shell():
         command = input("command: >> ")
         if command == "add":
             name = input("name: >> ")
-            type = input("type: >> ")
+            type = input("type (sperate with space): >> ")
             child = input("child (sperate with space): >> ")
             child = child.split(" ")
+            type = type.split(" ")
             new = {"type":type, "name":name, "child":child}
             command_to_send = ShadeShell_pb2.command(command="add "+json.dumps(new))
         else:
