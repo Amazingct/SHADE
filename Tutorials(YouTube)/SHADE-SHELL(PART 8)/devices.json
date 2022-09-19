@@ -11,13 +11,13 @@
         ]
     },
     "office": {
-        "name": "office",
         "type": [
             "switch",
             "sensor"
         ],
+        "name": "office",
         "child": [
-            "door",
+            "light",
             "temperature"
         ]
     }

@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 from random import randrange, uniform
 import time
 
-ip = "192.168.0.132"
+ip = "192.168.1.100"
 port = 1883
 
 
